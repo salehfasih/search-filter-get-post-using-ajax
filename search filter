@@ -1,0 +1,52 @@
+function data_fetch(){
+
+
+ $the_query =  
+array(
+
+    'post_type' => 'userads',
+    'meta_query'=> array(
+        'relation' => 'AND',
+       array(
+      
+          'key'=>'location',
+          'value'=>$_POST['location'],
+            'compare'=>'='
+
+       ),
+       array(
+      
+            'key'   =>  'price',
+            'value' =>  array($_POST['min-value'],$_POST['max-value']),
+            'compare'=> 'between',
+            'type' => 'NUMERIC'
+
+
+       ),
+
+   )
+      );
+
+$the_query= new WP_Query($the_query);
+
+echo  "<div class='my_post'>";
+if( $the_query->have_posts() ) :
+        while( $the_query->have_posts() ): $the_query->the_post(); ?>
+            <div class="posts">
+                <?php    the_post_thumbnail(); ?>
+            <h2><a href="<?php echo esc_url( post_permalink() ); ?>"><?php the_title();?></a></h2>
+            <p><?php   the_content(); ?></p>
+            <p><?php   the_field('price'); ?></p>
+            <p><?php   the_field('location'); ?></p>
+
+</div>
+        <?php endwhile; else: echo "No post in ".$_POST['location'];
+        wp_reset_postdata();  
+    endif;
+echo  "</div >";
+    die(); 
+
+
+  
+
+}
